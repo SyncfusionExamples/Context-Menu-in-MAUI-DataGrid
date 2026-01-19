@@ -43,76 +43,57 @@ namespace ContextMenuSample
             SortDescendingCommand = new Command<HeaderContextInfo>(OnSortDescending);
             ClearSortingCommand = new Command<HeaderContextInfo>(OnClearSorting);
             DeleteCommand = new Command<RowContextMenuInfo>(OnDelete);
-            UndoDeleteCommand = new Command(OnUndoDelete, CanUndoDelete);
+            UndoDeleteCommand = new Command<RowContextMenuInfo>(OnUndoDelete);
             ExpandGroupCommand = new Command<GroupCaptionContextInfo>(OnExpandGroup);
             CollapseGroupCommand = new Command<GroupCaptionContextInfo>(OnCollapseGroup);
             ShowTotalOrdersCommand = new Command<TableSummaryContextInfo>(OnShowTotalOrders);
             ShowTotalGroupsCommand = new Command<TableSummaryContextInfo>(OnShowTotalGroups);
         }
 
-        private void OnShowTotalOrders(TableSummaryContextInfo contextInfo)
+        private void OnShowTotalGroups(TableSummaryContextInfo info)
         {
-            if (contextInfo?.DataGrid == null) return;
-            var grid = contextInfo.DataGrid;
+            if (info?.DataGrid == null) return;
 
-            int totalOrders = grid.View?.Records?.Count
-                              ?? (grid.ItemsSource as System.Collections.ICollection)?.Count
-                              ?? 0;
-
-            var row = contextInfo.SummaryRow ?? grid.TableSummaryRows.FirstOrDefault();
-            if (row == null) return;
-
-            row.ShowSummaryInRow = true;
-            row.Title = $"Total Orders: {totalOrders}";
-
-            grid.View?.Refresh();
-        }
-
-        private void OnShowTotalGroups(TableSummaryContextInfo contextInfo)
-        {
-            if (contextInfo?.DataGrid == null) return;
-            var grid = contextInfo.DataGrid;
-
+            var grid = info.DataGrid;
             int totalGroups = grid.View?.TopLevelGroup?.Groups?.Count ?? 0;
-
-            var row = contextInfo.SummaryRow ?? grid.TableSummaryRows.FirstOrDefault();
+            var row = info.SummaryRow ?? grid.TableSummaryRows.FirstOrDefault();
             if (row == null) return;
 
             row.ShowSummaryInRow = true;
             row.Title = $"Total Groups: {totalGroups}";
-
             grid.View?.Refresh();
         }
 
-        private void OnExpandGroup(GroupCaptionContextInfo context)
+        private void OnShowTotalOrders(TableSummaryContextInfo info)
         {
-            if (context?.DataGrid == null || context.Group == null) return;
-            context.DataGrid.ExpandGroup(context.Group);
+            if (info?.DataGrid == null) return;
+
+            var grid = info.DataGrid;
+            int totalOrders = grid.View?.Records?.Count ?? (grid.ItemsSource as System.Collections.ICollection)?.Count ?? 0;
+            var row = info.SummaryRow ?? grid.TableSummaryRows.FirstOrDefault();
+
+            if (row == null) return;
+
+            row.ShowSummaryInRow = true;
+            row.Title = $"Total Orders: {totalOrders}";
+            grid.View?.Refresh();
         }
 
-        private void OnCollapseGroup(GroupCaptionContextInfo context)
+        private void OnCollapseGroup(GroupCaptionContextInfo info)
         {
-            if (context?.DataGrid == null || context.Group == null) return;
-            context.DataGrid.CollapseGroup(context.Group);
+            if (info?.DataGrid == null || info.Group == null) return;
+            info.DataGrid.CollapseGroup(info.Group);
         }
 
-
-        private void OnDelete(RowContextMenuInfo context)
+        private void OnExpandGroup(GroupCaptionContextInfo info)
         {
-            if (context?.RowData is not OrderInfo row)
-            {
-                return;
-            }
-
-            _lastDeletedIndex = OrderInfoCollection.IndexOf(row);
-            _lastDeletedItem = row;
-            OrderInfoCollection.Remove(row);
-            (UndoDeleteCommand as Command)?.ChangeCanExecute();
+            if (info?.DataGrid == null || info.Group == null) return;
+            info.DataGrid.ExpandGroup(info.Group);
         }
 
-        private void OnUndoDelete()
+        private void OnUndoDelete(RowContextMenuInfo info)
         {
-            if (_lastDeletedItem == null) return;
+            if (info?.DataGrid == null || _lastDeletedItem == null) return;
 
             var insertIndex = _lastDeletedIndex;
             if (insertIndex < 0 || insertIndex > OrderInfoCollection.Count)
@@ -123,41 +104,47 @@ namespace ContextMenuSample
             OrderInfoCollection.Insert(insertIndex, _lastDeletedItem);
             _lastDeletedItem = null;
             _lastDeletedIndex = -1;
-            (UndoDeleteCommand as Command)?.ChangeCanExecute();
         }
 
-        private bool CanUndoDelete()
+        private void OnDelete(RowContextMenuInfo info)
         {
-            return _lastDeletedItem != null;
-        }
-
-        private void OnSortAscending(HeaderContextInfo context)
-        {
-            if (context?.DataGrid == null || context.Column == null) return;
-
-            context.DataGrid.SortColumnDescriptions.Clear();
-            context.DataGrid.SortColumnDescriptions.Add(new SortColumnDescription
+            if (info?.RowData is not OrderInfo row)
             {
-                ColumnName = context.Column.MappingName,
-                SortDirection = System.ComponentModel.ListSortDirection.Ascending
+                return;
+            }
+
+            _lastDeletedIndex = OrderInfoCollection.IndexOf(row);
+            _lastDeletedItem = row;
+            OrderInfoCollection.Remove(row);
+        }
+
+        private void OnClearSorting(HeaderContextInfo info)
+        {
+            info.DataGrid.SortColumnDescriptions.Clear();
+        }
+
+        private void OnSortDescending(HeaderContextInfo info)
+        {
+            if (info?.DataGrid == null || info?.Column == null) return;
+
+            info.DataGrid.SortColumnDescriptions.Clear();
+            info.DataGrid.SortColumnDescriptions.Add(new SortColumnDescription
+            {
+                ColumnName = info.Column.MappingName,
+                SortDirection = ListSortDirection.Descending
             });
         }
 
-        private void OnSortDescending(HeaderContextInfo context)
+        private void OnSortAscending(HeaderContextInfo info)
         {
-            if (context?.DataGrid == null || context.Column == null) return;
+            if (info?.DataGrid == null || info?.Column == null) return;
 
-            context.DataGrid.SortColumnDescriptions.Clear();
-            context.DataGrid.SortColumnDescriptions.Add(new SortColumnDescription
+            info.DataGrid.SortColumnDescriptions.Clear();
+            info.DataGrid.SortColumnDescriptions.Add(new SortColumnDescription
             {
-                ColumnName = context.Column.MappingName,
-                SortDirection = System.ComponentModel.ListSortDirection.Descending
+                ColumnName = info.Column.MappingName,
+                SortDirection = ListSortDirection.Ascending
             });
-        }
-
-        private void OnClearSorting(HeaderContextInfo context)
-        {
-            context?.DataGrid?.SortColumnDescriptions.Clear();
         }
 
         public void GenerateOrders()

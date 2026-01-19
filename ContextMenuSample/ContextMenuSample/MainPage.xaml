@@ -19,22 +19,24 @@
 
         <datagrid:SfDataGrid.HeaderContextMenu>
             <datagrid:MenuItemCollection>
-                <datagrid:MenuItem Text="Sort Ascending" 
-                               Command="{Binding Path=BindingContext.SortAscendingCommand, Source={x:Reference dataGrid}}">
+                <datagrid:MenuItem Text="Sort Ascending"
+                                   Command="{Binding Path=BindingContext.SortAscendingCommand, Source={x:Reference dataGrid}}">
                     <datagrid:MenuItem.Icon>
-                        <Label Text="&#xe791;" FontFamily="MauiMaterialAssets" />
+                        <Label Text="&#xe791;" FontFamily="MauiMaterialAssets"/>
                     </datagrid:MenuItem.Icon>
                 </datagrid:MenuItem>
+
                 <datagrid:MenuItem Text="Sort Descending"
-                               Command="{Binding Path=BindingContext.SortDescendingCommand, Source={x:Reference dataGrid}}">
+                                   Command="{Binding Path=BindingContext.SortDescendingCommand, Source={x:Reference dataGrid}}">
                     <datagrid:MenuItem.Icon>
-                        <Label Text="&#xe792;" FontFamily="MauiMaterialAssets" />
+                        <Label Text="&#xe792;" FontFamily="MauiMaterialAssets"/>
                     </datagrid:MenuItem.Icon>
                 </datagrid:MenuItem>
+
                 <datagrid:MenuItem Text="Clear Sorting"
-                                Command="{Binding Path=BindingContext.ClearSortingCommand, Source={x:Reference dataGrid}}">
+                                   Command="{Binding Path=BindingContext.ClearSortingCommand, Source={x:Reference dataGrid}}">
                     <datagrid:MenuItem.Icon>
-                        <Label Text="&#xe70e;" FontFamily="MauiMaterialAssets" />
+                        <Label Text="&#xe70e;" FontFamily="MauiMaterialAssets"/>
                     </datagrid:MenuItem.Icon>
                 </datagrid:MenuItem>
             </datagrid:MenuItemCollection>
@@ -43,17 +45,16 @@
         <datagrid:SfDataGrid.RecordContextMenu>
             <datagrid:MenuItemCollection>
                 <datagrid:MenuItem Text="Delete"
-                               Command="{Binding Path=BindingContext.DeleteCommand, Source={x:Reference dataGrid}}"
-                               CommandParameter="{Binding}">
+                                   Command="{Binding Path=BindingContext.DeleteCommand, Source={x:Reference dataGrid}}">
                     <datagrid:MenuItem.Icon>
                         <Label Text="&#xe70f;" FontFamily="MauiMaterialAssets"/>
                     </datagrid:MenuItem.Icon>
                 </datagrid:MenuItem>
+
                 <datagrid:MenuItem Text="Undo Delete"
-                               Command="{Binding Path=BindingContext.UndoDeleteCommand, Source={x:Reference dataGrid}}">
+                                   Command="{Binding Path=BindingContext.UndoDeleteCommand, Source={x:Reference dataGrid}}">
                     <datagrid:MenuItem.Icon>
-                        <Label Text="&#xe744;" FontFamily="MauiMaterialAssets"
-                           HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                        <Label Text="&#xe744;" FontFamily="MauiMaterialAssets"/>
                     </datagrid:MenuItem.Icon>
                 </datagrid:MenuItem>
             </datagrid:MenuItemCollection>
@@ -61,14 +62,15 @@
 
         <datagrid:SfDataGrid.GroupCaptionContextMenu>
             <datagrid:MenuItemCollection>
-                <datagrid:MenuItem Text="Collapse" CommandParameter="{Binding}"
-                                Command="{Binding Path=BindingContext.CollapseGroupCommand, Source={x:Reference dataGrid}}">
+                <datagrid:MenuItem Text="Collapse"
+                                   Command="{Binding Path=BindingContext.CollapseGroupCommand, Source={x:Reference dataGrid}}">
                     <datagrid:MenuItem.Icon>
                         <Label Text="&#xe708;" FontFamily="MauiMaterialAssets"/>
                     </datagrid:MenuItem.Icon>
                 </datagrid:MenuItem>
-                <datagrid:MenuItem Text="Expand" CommandParameter="{Binding}"
-                                Command="{Binding Path=BindingContext.ExpandGroupCommand, Source={x:Reference dataGrid}}">
+
+                <datagrid:MenuItem Text="Expand"
+                                   Command="{Binding Path=BindingContext.ExpandGroupCommand, Source={x:Reference dataGrid}}">
                     <datagrid:MenuItem.Icon>
                         <Label Text="&#xe705;" FontFamily="MauiMaterialAssets"/>
                     </datagrid:MenuItem.Icon>
@@ -80,7 +82,8 @@
             <datagrid:DataGridTableSummaryRow ShowSummaryInRow="True" Title="Total Orders: {Orders}">
                 <datagrid:DataGridTableSummaryRow.SummaryColumns>
                     <datagrid:DataGridSummaryColumn Name="Orders" MappingName="OrderID"
-                                                SummaryType="CountAggregate" Format="{}{Count}" />
+                                                    SummaryType="CountAggregate"
+                                                    Format="{} {Count}"/>
                 </datagrid:DataGridTableSummaryRow.SummaryColumns>
             </datagrid:DataGridTableSummaryRow>
         </datagrid:SfDataGrid.TableSummaryRows>
@@ -88,13 +91,14 @@
         <datagrid:SfDataGrid.TableSummaryContextMenu>
             <datagrid:MenuItemCollection>
                 <datagrid:MenuItem Text="Total Orders"
-                                Command="{Binding Path=BindingContext.ShowTotalOrdersCommand, Source={x:Reference dataGrid}}">
+                                   Command="{Binding Path=BindingContext.ShowTotalOrdersCommand, Source={x:Reference dataGrid}}">
                     <datagrid:MenuItem.Icon>
                         <Label Text="&#xe731;" FontFamily="MauiSampleFontIcon"/>
                     </datagrid:MenuItem.Icon>
                 </datagrid:MenuItem>
+
                 <datagrid:MenuItem Text="Total Groups"
-                                Command="{Binding Path=BindingContext.ShowTotalGroupsCommand, Source={x:Reference dataGrid}}" >
+                                   Command="{Binding Path=BindingContext.ShowTotalGroupsCommand, Source={x:Reference dataGrid}}">
                     <datagrid:MenuItem.Icon>
                         <Label Text="&#xe776;" FontFamily="MauiSampleFontIcon"/>
                     </datagrid:MenuItem.Icon>

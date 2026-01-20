@@ -1,4 +1,5 @@
 ﻿using Syncfusion.Maui.DataGrid;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -125,12 +126,11 @@ namespace ContextMenuSample
             var grid = info.DataGrid;
             var columnName = info.Column.MappingName;
 
-            for (int i = grid.SortColumnDescriptions.Count - 1; i >= 0; i--)
+            foreach (var sortColumn in new List<SortColumnDescription>(grid.SortColumnDescriptions))
             {
-                var sortColumn = grid.SortColumnDescriptions[i];
                 if (string.Equals(sortColumn.ColumnName, columnName, StringComparison.OrdinalIgnoreCase))
                 {
-                    grid.SortColumnDescriptions.RemoveAt(i);
+                    grid.SortColumnDescriptions.Remove(sortColumn);
                 }
             }
         }
@@ -142,9 +142,8 @@ namespace ContextMenuSample
             var grid = info.DataGrid;
             var columnName = info.Column.MappingName;
 
-            for (int i = 0; i < grid.SortColumnDescriptions.Count; i++)
+            foreach (var desc in new List<SortColumnDescription>(grid.SortColumnDescriptions))
             {
-                var desc = grid.SortColumnDescriptions[i];
                 if (string.Equals(desc.ColumnName, columnName, StringComparison.OrdinalIgnoreCase))
                 {
                     if (desc.SortDirection == ListSortDirection.Descending)
@@ -152,14 +151,20 @@ namespace ContextMenuSample
                         return;
                     }
 
-                    grid.SortColumnDescriptions.RemoveAt(i);
-                    grid.SortColumnDescriptions.Insert(i, new SortColumnDescription
+                    var index = grid.SortColumnDescriptions.IndexOf(desc);
+                    if (index >= 0)
                     {
-                        ColumnName = columnName,
-                        SortDirection = ListSortDirection.Descending
-                    });
+                        grid.SortColumnDescriptions.RemoveAt(index);
+                        grid.SortColumnDescriptions.Insert(index, new SortColumnDescription
+                        {
+                            ColumnName = columnName,
+                            SortDirection = ListSortDirection.Descending
+                        });
 
-                    return;
+                        return;
+                    }
+
+                    break;
                 }
             }
 
@@ -177,9 +182,8 @@ namespace ContextMenuSample
             var grid = info.DataGrid;
             var columnName = info.Column.MappingName;
 
-            for (int i = 0; i < grid.SortColumnDescriptions.Count; i++)
+            foreach (var desc in new List<SortColumnDescription>(grid.SortColumnDescriptions))
             {
-                var desc = grid.SortColumnDescriptions[i];
                 if (string.Equals(desc.ColumnName, columnName, StringComparison.OrdinalIgnoreCase))
                 {
                     if (desc.SortDirection == ListSortDirection.Ascending)
@@ -187,14 +191,20 @@ namespace ContextMenuSample
                         return;
                     }
 
-                    grid.SortColumnDescriptions.RemoveAt(i);
-                    grid.SortColumnDescriptions.Insert(i, new SortColumnDescription
+                    var index = grid.SortColumnDescriptions.IndexOf(desc);
+                    if (index >= 0)
                     {
-                        ColumnName = columnName,
-                        SortDirection = ListSortDirection.Ascending
-                    });
+                        grid.SortColumnDescriptions.RemoveAt(index);
+                        grid.SortColumnDescriptions.Insert(index, new SortColumnDescription
+                        {
+                            ColumnName = columnName,
+                            SortDirection = ListSortDirection.Ascending
+                        });
 
-                    return;
+                        return;
+                    }
+
+                    break;
                 }
             }
 

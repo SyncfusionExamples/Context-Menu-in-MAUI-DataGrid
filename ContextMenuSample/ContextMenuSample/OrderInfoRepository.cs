@@ -120,29 +120,87 @@ namespace ContextMenuSample
 
         private void OnClearSorting(HeaderContextInfo info)
         {
-            info.DataGrid.SortColumnDescriptions.Clear();
+            if (info?.DataGrid == null || string.IsNullOrEmpty(info.Column?.MappingName)) return;
+
+            var grid = info.DataGrid;
+            var columnName = info.Column.MappingName;
+
+            for (int i = grid.SortColumnDescriptions.Count - 1; i >= 0; i--)
+            {
+                var sortColumn = grid.SortColumnDescriptions[i];
+                if (string.Equals(sortColumn.ColumnName, columnName, StringComparison.OrdinalIgnoreCase))
+                {
+                    grid.SortColumnDescriptions.RemoveAt(i);
+                }
+            }
         }
 
         private void OnSortDescending(HeaderContextInfo info)
         {
-            if (info?.DataGrid == null || info?.Column == null) return;
+            if (info?.DataGrid == null || string.IsNullOrEmpty(info.Column?.MappingName)) return;
 
-            info.DataGrid.SortColumnDescriptions.Clear();
-            info.DataGrid.SortColumnDescriptions.Add(new SortColumnDescription
+            var grid = info.DataGrid;
+            var columnName = info.Column.MappingName;
+
+            for (int i = 0; i < grid.SortColumnDescriptions.Count; i++)
             {
-                ColumnName = info.Column.MappingName,
+                var desc = grid.SortColumnDescriptions[i];
+                if (string.Equals(desc.ColumnName, columnName, StringComparison.OrdinalIgnoreCase))
+                {
+                    if (desc.SortDirection == ListSortDirection.Descending)
+                    {
+                        return;
+                    }
+
+                    grid.SortColumnDescriptions.RemoveAt(i);
+                    grid.SortColumnDescriptions.Insert(i, new SortColumnDescription
+                    {
+                        ColumnName = columnName,
+                        SortDirection = ListSortDirection.Descending
+                    });
+
+                    return;
+                }
+            }
+
+            grid.SortColumnDescriptions.Add(new SortColumnDescription
+            {
+                ColumnName = columnName,
                 SortDirection = ListSortDirection.Descending
             });
         }
 
         private void OnSortAscending(HeaderContextInfo info)
         {
-            if (info?.DataGrid == null || info?.Column == null) return;
+            if (info?.DataGrid == null || string.IsNullOrEmpty(info.Column?.MappingName)) return;
 
-            info.DataGrid.SortColumnDescriptions.Clear();
-            info.DataGrid.SortColumnDescriptions.Add(new SortColumnDescription
+            var grid = info.DataGrid;
+            var columnName = info.Column.MappingName;
+
+            for (int i = 0; i < grid.SortColumnDescriptions.Count; i++)
             {
-                ColumnName = info.Column.MappingName,
+                var desc = grid.SortColumnDescriptions[i];
+                if (string.Equals(desc.ColumnName, columnName, StringComparison.OrdinalIgnoreCase))
+                {
+                    if (desc.SortDirection == ListSortDirection.Ascending)
+                    {
+                        return;
+                    }
+
+                    grid.SortColumnDescriptions.RemoveAt(i);
+                    grid.SortColumnDescriptions.Insert(i, new SortColumnDescription
+                    {
+                        ColumnName = columnName,
+                        SortDirection = ListSortDirection.Ascending
+                    });
+
+                    return;
+                }
+            }
+
+            grid.SortColumnDescriptions.Add(new SortColumnDescription
+            {
+                ColumnName = columnName,
                 SortDirection = ListSortDirection.Ascending
             });
         }
